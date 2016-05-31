@@ -19,14 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="linkednodehead.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="nodemap.cpp" />
+    <ClInclude Include="astarnode.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="node.h" />
-    <ClInclude Include="nodemap.h" />
-    <ClInclude Include="UserDefine.h" />
+    <ClCompile Include="list_astarnode.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{448DCDD2-2467-40A6-9F38-98ECB9310B39}</ProjectGuid>
