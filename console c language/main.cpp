@@ -1,4 +1,5 @@
 #include <iostream>
+#include <dos.h>
 #include "astarnode.h"
 #include "userdefine.h"
 
@@ -33,6 +34,31 @@ int main()
 	list_astarnode openlist;//발견된 리스트
 	list_astarnode closelist;//탐색된 리스트
 	astarnode *current;//최적루트를 찾을 주소값
+	auto printmapfunc = [](astarnode_map *map, char *string)
+	{
+		system("cls");
+		for (int yi = 1; yi <= MAPSIZE_Y; yi++)
+		{
+			for (int xi = 1; xi <= MAPSIZE_X; xi++)
+			{
+				switch (map->nodeptr(xi, yi)->type)
+				{
+				case NODETYPE_STARTPOINT:	cout << "♡"; break;
+				case NODETYPE_DESTINATION:	cout << "♥"; break;
+				case NODETYPE_IMPASSABLE:	cout << "▩"; break;
+				case NODETYPE_PASSABLE:		cout << "▒"; break;
+				case NODETYPE_FINALROUTE:	cout << "♥"; break;
+				case NODETYPE_OPENED:		cout << "□"; break;
+				case NODETYPE_CLOSED:		cout << "■"; break;
+				default: cout << "?"; break;
+				}
+			}
+			cout << endl;
+		}
+		cout << endl;
+		cout << string << endl;
+		system("pause");
+	};
 
 	////userdefine.h 에서 설정된 값을 이용해 맵 제작
 	map.CreateMap(MAPSIZE_X, MAPSIZE_Y);
@@ -52,6 +78,8 @@ int main()
 		if (current->x == DESTINATION_X && current->y == DESTINATION_Y) break;
 
 		closelist.push_front(current);
+		if(current->type != NODETYPE_STARTPOINT && current->type != NODETYPE_DESTINATION)
+			current->type = NODETYPE_CLOSED;
 
 		astarnode *direction;
 		//xSubVal : -1~1 사이의 x값. 각 값은 왼쪽, 중앙, 오른쪽을 의미한다.
@@ -65,7 +93,7 @@ int main()
 
 				///direction 선검사
 				if (!direction) continue;//갈 수 없을 경우
-				if (direction->type != NODETYPE_PASSABLE) continue;//지나갈 수 없는 구역일 경우
+				if (direction->type == NODETYPE_IMPASSABLE) continue;//지나갈 수 없는 구역일 경우
 				//if (direction == current) continue;//정중앙일 경우 //current는 이미 closelist에 있으므로 생략 가능.
 				if (closelist.search(direction)) continue;//발견 되었으며 탐색한 적도 있는 경우
 				///direction 선검사 끝
@@ -92,7 +120,7 @@ int main()
 				else
 				{
 					direction->parent = current;
-					openlist.push_back(direction);
+					openlist.push_front(direction);
 
 					//direction 노드와 도착점 사이의 거리
 					Point2D diff; diff.x = ABS(direction->x - DESTINATION_X); diff.y = ABS(direction->y - DESTINATION_Y); //Point2D diff = { ABS(direction->x - DESTINATION_X), ABS(direction->y - DESTINATION_Y) };
@@ -122,12 +150,14 @@ int main()
 
 					//f에 최종값 대입
 					direction->f = direction->g + direction->h;
+					if(direction->type != NODETYPE_STARTPOINT && direction->type != NODETYPE_DESTINATION)
+						direction->type = NODETYPE_OPENED;
 				}
 				////발견된 적 없는 노드일 경우 끝
 
 			}
 		}
-
+		printmapfunc(&map, "");
 		openlist.SortByFval();
 	}
 
@@ -135,45 +165,21 @@ int main()
 	//////////////////////////////////////////////////////////// 구현 끝 ////////////////////////////////////////////////////////////
 
 
-	////그래픽 표현 시작
-
 	astarnode *bestroute = current;
 
-	if (!bestroute)
-		cout << "FAILED!\n" << endl;
-	else {
-		cout << "SUCCESS!\n" << endl;
-		if (bestroute->parent)
-		{
-			while (bestroute->parent)
-			{
-				bestroute->type = NODETYPE_FINALROUTE;
-				bestroute = bestroute->parent;
-			}
-		}
-	}
-
-
-	for (int yi = 1; yi <= MAPSIZE_Y; yi++)
+	if (bestroute)
 	{
-		for (int xi = 1; xi <= MAPSIZE_X; xi++)
+		while (bestroute->parent)
 		{
-			switch (map.nodeptr(xi, yi)->type)
-			{
-			case NODETYPE_STARTPOINT: cout << "S"; break;
-			case NODETYPE_DESTINATION: cout << "D"; break;
-			case NODETYPE_IMPASSABLE: cout << "X"; break;
-			case NODETYPE_PASSABLE: cout << "O"; break;
-			case NODETYPE_FINALROUTE: cout << "F"; break;
-			case NODETYPE_CLOSED: cout << "C"; break;
-			default: cout << "?"; break;
-			}
+			bestroute->type = NODETYPE_FINALROUTE;
+			bestroute = bestroute->parent;
 		}
-		cout << endl;
+		bestroute->type = NODETYPE_FINALROUTE;
+		printmapfunc(&map, "SUCCESS!");
 	}
-	cout << endl;
+	else
+		cout << "FAILED!\n" << endl;
 
-	////그래픽 표현 끝
-
+	
 	return 0;
 }

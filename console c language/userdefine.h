@@ -1,11 +1,11 @@
-#define MAPSIZE_X		7
-#define MAPSIZE_Y		5
+#define MAPSIZE_X		12
+#define MAPSIZE_Y		12
 #define STARTPOINT_X	2
 #define STARTPOINT_Y	3
-#define DESTINATION_X	6
+#define DESTINATION_X	10
 #define DESTINATION_Y	3
 
-#define OBSTACLE_LIST	{4,2},{4,3},{4,4}
+#define OBSTACLE_LIST	{4,2},{4,3},{4,4},{4,5},{3,5},{3,2}, {5,2}, {8,1}, {8,2}, {8,3}, {8,4}, {8,5}, {8,6}, {8,7}, {8,8}, {7,8}, {6,8}, {6,9}
 
 
 ////이하는 수정하면 안 되는 부분

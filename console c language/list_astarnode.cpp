@@ -21,10 +21,11 @@ void list_astarnode::push_front(astarnode *data)
 	}
 	else
 	{
-		linked_astarnode *temp = new linked_astarnode;
-		temp->dataptr = dataptr; temp->next = next; temp->prev = this;
-		dataptr = data;
-		next = temp;
+		linked_astarnode *oldhead = new linked_astarnode;
+		oldhead->dataptr = dataptr; oldhead->next = next; oldhead->prev = this;
+		if(oldhead->next) oldhead->next->prev = oldhead;
+		dataptr = data; next = oldhead;
+		if (lastelem == this) lastelem = lastelem->next;
 	}
 }
 
@@ -61,7 +62,7 @@ astarnode *list_astarnode::pop_front(void)
 	{
 		dataptr = next->dataptr;
 		next = next->next;
-		delete prev; prev = nullptr;
+		prev = nullptr;
 	}
 
 	return retval;
@@ -108,40 +109,67 @@ linked_astarnode *list_astarnode::search(astarnode *data)
 	return iterator;
 }
 
-//Bubble Sort 사용. 구현하기 쉬우니까.
-//f값이 작은 순서대로 정렬됨.
-//같은 값의 경우 스왑하지 않음.
-
-//버블소트에서 에러발생.
-//다른거로 바꿔야지.
-
-//퀵소트로 변경.
+//Bubble Sort 사용.
 void list_astarnode::SortByFval(void)
 {
-	quick_sort_by_fval(this, this, lastelem);
+	///현재 성공이 확인된 소트.
+
+	bubble_sort_by_fval();//버블 정렬
+
+
+	///실패 목록
+	//quick_sort_by_fval(this, this, lastelem);//퀵 정렬. 대체로 잘 작동하는 듯 하지만 좀만 복잡해지면 꼬인다..
+
+
+	
+
+	
 }
 
 void list_astarnode::quick_sort_by_fval(linked_astarnode *head, linked_astarnode *oldleft, linked_astarnode *oldright)
 {
-	if (!head || !oldleft || !oldright) return;
-	if (oldleft == oldright) return;
-
-	linked_astarnode *left = oldleft; linked_astarnode *right = oldright;
-	astarnode *temp;
-	float fval_pivot = left->dataptr->f;
-
-	while (left != right && left != nullptr && right != nullptr)
+	linked_astarnode *left = oldleft, *right = oldright;
+	astarnode *pivotvalue = oldleft->dataptr;
+	
+	while (left != right)
 	{
-		while (left->dataptr->f <= fval_pivot && left != right) left = left->next;
-		while (right->dataptr->f >= fval_pivot && left != right) right = right->prev;
-		temp = left->dataptr;
-		left->dataptr = right->dataptr;
-		right->dataptr = temp;
-	}
-	temp = oldleft->dataptr;
-	oldleft->dataptr = left->dataptr;
-	left->dataptr = temp;
+		while (left != right && right->dataptr->f >= pivotvalue->f) right = right->prev;
+		if (left != right) left->dataptr = right->dataptr;
 
-	quick_sort_by_fval(head, oldleft, left->prev);
-	quick_sort_by_fval(head, left->next, oldright);
+		while (left != right && left->dataptr->f <= pivotvalue->f) left = left->next;
+		if (left != right) right->dataptr = left->dataptr;
+	}
+
+	left->dataptr = pivotvalue;
+
+	if (left != oldleft)
+		quick_sort_by_fval(head, oldleft, left->prev);
+	if (left != oldright)
+		quick_sort_by_fval(head, left->next, oldright);
+}
+void list_astarnode::bubble_sort_by_fval()
+{
+	linked_astarnode *iterator;
+	linked_astarnode *bubblelast = lastelem;
+
+	//손쉽게 O(n^2) 가 나오는 모습이다...
+	while (bubblelast != this)
+	{
+		iterator = this;
+		while (iterator->dataptr)
+		{
+			if (iterator->dataptr->f > iterator->next->dataptr->f)
+			{
+				astarnode *tempptr = iterator->dataptr;
+				iterator->dataptr = iterator->next->dataptr;
+				iterator->next->dataptr = tempptr;
+			}
+
+			if (iterator->next == bubblelast)
+				break;
+
+			iterator = iterator->next;
+		}
+		bubblelast = iterator;
+	}
 }

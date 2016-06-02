@@ -16,7 +16,7 @@ struct Point2D
 	virtual ~Point2D(){}
 };
 
-enum NODETYPE{ NODETYPE_STARTPOINT, NODETYPE_DESTINATION, NODETYPE_IMPASSABLE, NODETYPE_PASSABLE, NODETYPE_CLOSED, NODETYPE_FINALROUTE };
+enum NODETYPE{ NODETYPE_STARTPOINT, NODETYPE_DESTINATION, NODETYPE_IMPASSABLE, NODETYPE_PASSABLE, NODETYPE_OPENED, NODETYPE_CLOSED, NODETYPE_FINALROUTE };
 //각 노드에 담긴 정보.
 struct astarnode : public Point2D
 {
@@ -44,6 +44,7 @@ private:
 	linked_astarnode *lastelem = nullptr;
 	bool list_is_valid(void);
 	void quick_sort_by_fval(linked_astarnode *head, linked_astarnode *left, linked_astarnode *right);
+	void bubble_sort_by_fval();
 public:
 	void push_front(astarnode *data);
 	void push_back(astarnode *data);
