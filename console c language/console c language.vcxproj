@@ -20,9 +20,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="astarnode.h" />
+    <ClInclude Include="userdefine.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="astarnode_map.cpp" />
     <ClCompile Include="list_astarnode.cpp" />
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{448DCDD2-2467-40A6-9F38-98ECB9310B39}</ProjectGuid>
