@@ -162,7 +162,7 @@ namespace astarnode
         //해당 좌표가 유효한 지 검사
         private bool check_coord(int x, int y)
         {
-            if (x < 0 || y < 0
+            if (x < 1 || y < 1
                 || x > mapdata.GetLength(1) 
                 || y > mapdata.GetLength(0))
                 return false;

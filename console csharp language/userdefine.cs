@@ -4,13 +4,13 @@ namespace userdefines
 {
     class userdefine
     {
-        public const int MAPSIZE_X = 7;
-        public const int MAPSIZE_Y = 5;
+        public const int MAPSIZE_X = 12;
+        public const int MAPSIZE_Y = 12;
         public const int STARTPOINT_X = 2;
         public const int STARTPOINT_Y = 3;
-        public const int DESTINATION_X = 6;
+        public const int DESTINATION_X = 10;
         public const int DESTINATION_Y = 3;
-        public static readonly int[,] OBSTACLE_LIST = { { 4, 2 }, { 4, 3 }, { 4, 4 } };
+        public static readonly int[,] OBSTACLE_LIST = { { 4, 2 }, { 4, 3 }, { 4, 4 }, { 4, 5 }, { 3, 5 }, { 3, 2 }, { 5, 2 }, { 8, 1 }, { 8, 2 }, { 8, 3 }, { 8, 4 }, { 8, 5 }, { 8, 6 }, { 8, 7 }, { 8, 8 }, { 7, 8 }, { 6, 8 }, { 6, 9 } };
     }
 
     //모두 정상일 시 true
