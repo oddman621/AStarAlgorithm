@@ -125,28 +125,28 @@ int main()
 					//direction 노드와 도착점 사이의 거리
 					Point2D diff; diff.x = ABS(direction->x - DESTINATION_X); diff.y = ABS(direction->y - DESTINATION_Y); //Point2D diff = { ABS(direction->x - DESTINATION_X), ABS(direction->y - DESTINATION_Y) };
 
-					///g값 산출
+					///h값 산출
 					while (diff.x >= 1 && diff.y >= 1)
 					{
 						diff.x -= 1; diff.y -= 1;
-						direction->g += DIAGONAL_BASE * DISTANCE_UNIT;
+						direction->h += DIAGONAL_BASE * DISTANCE_UNIT;
 					}
 					while (diff.x >= 1)
 					{
 						diff.x -= 1;
-						direction->g += STRAIGHT_BASE * DISTANCE_UNIT;
+						direction->h += STRAIGHT_BASE * DISTANCE_UNIT;
 					}
 					while (diff.y >= 1)
 					{
 						diff.y -= 1;
-						direction->g += STRAIGHT_BASE * DISTANCE_UNIT;
+						direction->h += STRAIGHT_BASE * DISTANCE_UNIT;
 					}
-					///g값 산출 끝
-
-					///h값 산출
-					diff = { direction->parent->x - direction->x, direction->parent->y - direction->y };
-					direction->h += current->h + ((diff.x && diff.y) ? DIAGONAL_BASE : STRAIGHT_BASE) * DISTANCE_UNIT;
 					///h값 산출 끝
+
+					///g값 산출
+					diff = { direction->parent->x - direction->x, direction->parent->y - direction->y };
+					direction->g += current->g + ((diff.x && diff.y) ? DIAGONAL_BASE : STRAIGHT_BASE) * DISTANCE_UNIT;
+					///g값 산출 끝
 
 					//f에 최종값 대입
 					direction->f = direction->g + direction->h;
