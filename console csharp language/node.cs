@@ -3,12 +3,14 @@ namespace astarnode
 {
     class constrants
     {
+        //각 노드간 거리에 사용된다.
         public const float STRAIGHT = 1f;
         public const float DIAGONAL = 1.4f;
         public const float BASEDIST = 10f;
         public const float STRAIGHT_DIST = STRAIGHT * BASEDIST;
         public const float DIAGONAL_DIST = DIAGONAL * BASEDIST;
 
+        //타일표시에 이용된다.
         public const char PASSABLE      = '□';
         public const char IMPASSABLE    = '▩';
         public const char OPENED        = '▣';
@@ -40,8 +42,13 @@ namespace astarnode
         //꼬리(마지막 노드의 next값)가 아닌, 마지막 요소를 가리킨다.
         private linknode firstelem = null;
         private linknode lastelem = null;
-        
-        //매개변수를
+
+        //lastelem이나 firstelem이 알맞은 값으로 설정되었는지 자동으로 확인/교정해준다.
+        //다만 매개변수들이 올바른 값인지는 검사하지 않기 때문에
+        //( - beforedata와 afterdata는 붙어있는가? )
+        //( - 정말로 리스트의 beforedata와 afterdata 사이인가? )
+        //( - data는 유효한 값인가? )
+        //public으로 풀기엔 무리가 있는 것 같다.
         private void insert(linknode beforedata, node data, linknode afterdata)
         {
             linknode temp = new linknode(data, beforedata, afterdata);
@@ -72,8 +79,22 @@ namespace astarnode
 
         private void quick_sort_by_fval(linknode left, linknode right)
         {
-            //구현 예정
+            linknode left_it = left, right_it = right;
+            node pivot = left_it.data;
+
+            while(left_it != right_it)
+            {
+                while (left_it != right_it && right_it.data.f >= pivot.f) right_it = right_it.prev;
+                if (left_it != right_it) left_it.data = right_it.data;
+                while (left_it != right_it && left_it.data.f <= pivot.f) left_it = left_it.next;
+                if (left_it != right_it) right_it.data = left_it.data;
+            }
+            //left_it(==right_it)는 중앙(pivot)을 가리키고 있다.
+            left_it.data = pivot;
+            if (left_it != left) quick_sort_by_fval(left, left_it.prev);
+            if (left_it != right) quick_sort_by_fval(left_it.next, right);
         }
+        //느린 정렬이지만 구현하기 쉬우면서도 안정적으로 작동하기에 failsafe 용도로 남겨둔다.
         private void bubble_sort_by_fval()
         {
             linknode it;
@@ -127,8 +148,8 @@ namespace astarnode
         {
             if (firstelem == null || lastelem == null) return;
 
-            //quick_sort_by_fval(firstelem, lastelem);
-            bubble_sort_by_fval();
+            quick_sort_by_fval(firstelem, lastelem);
+            //bubble_sort_by_fval();
         }
     }
     class nodemap

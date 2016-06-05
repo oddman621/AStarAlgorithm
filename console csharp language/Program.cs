@@ -41,22 +41,23 @@ namespace console_csharp_language
                     for(int xSubVal = -1; xSubVal<=1; xSubVal++)
                     {
                         node direction = map.nodeptr(current.pos[0] + xSubVal, current.pos[1] + ySubVal);
-                        if (direction == null) continue;
-                        if (direction.tile == constrants.IMPASSABLE) continue;
-                        if (closelist.search(direction) != null) continue;
+                        if (direction == null) continue;//갈 수 없는 곳일 경우
+                        if (direction.tile == constrants.IMPASSABLE) continue;//이동이 불가능한 곳일 경우
+                        if (closelist.search(direction) != null) continue;//이미 탐색된 곳일 경우
 
+                        //발견되었지만 탐색한 적이 없는 곳일 경우
                         if(openlist.search(direction) != null)
                         {
                             int[] diff = { current.pos[0]-direction.pos[0], current.pos[1]-direction.pos[1] };
                             double distance_current_to_direction = (diff[0] != 0 && diff[1] != 0) ? constrants.DIAGONAL_DIST : constrants.STRAIGHT_DIST;
                             double current_g_plus_d_ctd = current.g + distance_current_to_direction;
-                            if(direction.g > current_g_plus_d_ctd)
+                            if(direction.g > current_g_plus_d_ctd)//g값 비교 및 대입
                             {
                                 direction.shortest_route = current; direction.g = current_g_plus_d_ctd;
                                 direction.f = direction.g + direction.h;
                             }
                         }
-                        else
+                        else//탐색하지 않은 곳일 경우
                         {
                             int[] diff = { Math.Abs(current.pos[0] - direction.pos[0]), Math.Abs(current.pos[1] - direction.pos[1]) };
 
@@ -81,6 +82,8 @@ namespace console_csharp_language
                             openlist.push_front(direction);
                         }
                     }
+
+                //길찾기 과정 출력
                 for (int yi = 1; yi <= userdefine.MAPSIZE_Y; yi++)
                 {
                     for (int xi = 1; xi <= userdefine.MAPSIZE_X; xi++)
@@ -93,7 +96,7 @@ namespace console_csharp_language
             }
             //길 탐색 끝
 
-            //최적 루트 표시 및 맵 출력
+            //최적 루트 표시 및 결과 출력
             node bestroute = current;
             if (bestroute != null)
             {
