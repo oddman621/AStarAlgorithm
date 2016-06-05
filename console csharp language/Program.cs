@@ -22,7 +22,7 @@ namespace console_csharp_language
             if (!check_userdefines.CHECK_USERDEF_PROGRESS()) return;
 
             //데이터 준비
-            nodemap map = null; SettingMap(ref map);
+            nodemap map = new nodemap(); SettingMap(ref map);
             nodelist openlist = new nodelist(), 
                 closelist = new nodelist();
             node current = null;
@@ -48,10 +48,46 @@ namespace console_csharp_language
                         if(openlist.search(direction) != null)
                         {
                             int[] diff = { current.pos[0]-direction.pos[0], current.pos[1]-direction.pos[1] };
-                            float distance_current_to_direction
+                            double distance_current_to_direction = (diff[0] != 0 && diff[1] != 0) ? constrants.DIAGONAL_DIST : constrants.STRAIGHT_DIST;
+                            double current_g_plus_d_ctd = current.g + distance_current_to_direction;
+                            if(direction.g > current_g_plus_d_ctd)
+                            {
+                                direction.shortest_route = current; direction.g = current_g_plus_d_ctd;
+                                direction.f = direction.g + direction.h;
+                            }
+                        }
+                        else
+                        {
+                            int[] diff = { Math.Abs(current.pos[0] - direction.pos[0]), Math.Abs(current.pos[1] - direction.pos[1]) };
 
+                            //g값 산출 및 대입
+                            direction.g = current.g + ((diff[0] + diff[1] == 2) ? constrants.DIAGONAL_DIST : constrants.STRAIGHT_DIST);
+
+                            //h값 산출 및 대입
+                            diff = new int[2]{ Math.Abs(direction.pos[0] - userdefine.DESTINATION_X), Math.Abs(direction.pos[1] - userdefine.DESTINATION_Y) };
+                            while (diff[0] >= 1 && diff[1] >= 1)
+                            { diff[0] -= 1; diff[1] -= 1; direction.h += constrants.DIAGONAL_DIST; }
+                            while(diff[0]-- >= 1)
+                                direction.h += constrants.STRAIGHT_DIST;
+                            while(diff[1]-- >= 1)
+                                direction.h += constrants.STRAIGHT_DIST;
+
+                            //최종 f값 산출 및 대입
+                            direction.f = direction.g + direction.h;
+                            if (direction.tile != constrants.DESTINATION && direction.tile != constrants.STARTPOINT)
+                                direction.tile = constrants.OPENED;
+
+                            direction.shortest_route = current;
+                            openlist.push_front(direction);
                         }
                     }
+                for (int yi = 1; yi <= userdefine.MAPSIZE_Y; yi++)
+                {
+                    for (int xi = 1; xi <= userdefine.MAPSIZE_X; xi++)
+                        Console.Write(map.nodeptr(xi, yi).tile);
+                    Console.WriteLine();
+                }
+                Console.WriteLine();
 
                 openlist.SortByFval();
             }

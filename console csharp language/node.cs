@@ -6,6 +6,8 @@ namespace astarnode
         public const float STRAIGHT = 1f;
         public const float DIAGONAL = 1.4f;
         public const float BASEDIST = 10f;
+        public const float STRAIGHT_DIST = STRAIGHT * BASEDIST;
+        public const float DIAGONAL_DIST = DIAGONAL * BASEDIST;
 
         public const char PASSABLE      = '□';
         public const char IMPASSABLE    = '▩';
@@ -21,6 +23,8 @@ namespace astarnode
         public int[] pos = { 0, 0 };
         public char tile = constrants.PASSABLE;
         public node shortest_route = null;
+        public node() { }
+        public node(int x, int y) { pos[0] = x; pos[1] = y; }
     }
     class linknode
     {
@@ -114,7 +118,7 @@ namespace astarnode
         public linknode search(node data)
         {
             for (linknode it = firstelem; it != null; it = it.next)
-                if (firstelem.data.pos[0] == data.pos[0] && firstelem.data.pos[1] == data.pos[1])
+                if (it.data.pos[0] == data.pos[0] && it.data.pos[1] == data.pos[1])
                     return it;
             return null;
         }
@@ -154,6 +158,9 @@ namespace astarnode
         public void CreateMap(int size_x, int size_y)
         {
             mapdata = new node[size_y, size_x];
+            for(int yi = 1; yi <= mapdata.GetLength(0); yi++)
+                for(int xi = 1; xi <= mapdata.GetLength(1); xi++)
+                    mapdata[yi - 1, xi - 1] = new node(xi, yi);
         }
     }
 }
