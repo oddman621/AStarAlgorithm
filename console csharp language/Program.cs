@@ -57,7 +57,7 @@ namespace console_csharp_language
                                 direction.f = direction.g + direction.h;
                             }
                         }
-                        else//탐색하지 않은 곳일 경우
+                        else//발견되지 않은 곳일 경우
                         {
                             int[] diff = { Math.Abs(current.pos[0] - direction.pos[0]), Math.Abs(current.pos[1] - direction.pos[1]) };
 
