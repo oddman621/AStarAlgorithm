@@ -62,7 +62,7 @@ namespace console_csharp_language
                             int[] diff = { Math.Abs(current.pos[0] - direction.pos[0]), Math.Abs(current.pos[1] - direction.pos[1]) };
 
                             //g값 산출 및 대입
-                            direction.g = current.g + ((diff[0] + diff[1] == 2) ? constrants.DIAGONAL_DIST : constrants.STRAIGHT_DIST);
+                            direction.g = current.g + ((diff[0] != 0 && diff[1] != 0) ? constrants.DIAGONAL_DIST : constrants.STRAIGHT_DIST);
 
                             //h값 산출 및 대입
                             diff = new int[2]{ Math.Abs(direction.pos[0] - userdefine.DESTINATION_X), Math.Abs(direction.pos[1] - userdefine.DESTINATION_Y) };
